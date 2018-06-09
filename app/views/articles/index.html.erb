@@ -6,7 +6,9 @@
     <th colspan="2"></th>
   </tr>
 
-  <% @articles.each do |article| %>
+  <p><%= link_to "next", articles_path(:before => @articles.cursor) %></p>
+  <%= link_to "back", articles_path(:after => @articles.cursor) %>
+  <% @articles.list.each do |article| %>
     <tr>
       <td><%= article.title %></td>
       <td><%= article.text %></td>
@@ -17,4 +19,5 @@
               data: { confirm: 'Are you sure?' } %></td>
     </tr>
   <% end %>
+
 </table>

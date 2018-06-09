@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  http_basic_authenticate_with name: "dhh", password: "secret", except: [:index, :show]
+  http_basic_authenticate_with name: 'admin', password: 'admin', except: [:index, :show]
 
   def destroy
     @article = Article.find(params[:id])
@@ -9,7 +9,19 @@ class ArticlesController < ApplicationController
   end
 
   def index
-    @articles = Article.all
+    # logger.info 'after=' + params[:after] (per: params[:per], after: params[:after])
+    list = Articles::Index.new(after: params[:after], before: params[:before])
+
+    logger.info '==================='
+
+    logger.info "params[:after] = #{params[:after]}"
+    logger.info "cursor = #{list.cursor}"
+    logger.info "cursor_first = #{list.cursor_first}"
+    logger.info "can_load_more = #{list.can_load_more}"
+
+    logger.info '==================='
+
+    @articles = list
   end
 
   def show
@@ -45,6 +57,7 @@ class ArticlesController < ApplicationController
   end
 
   private
+
     def article_params
       params.require(:article).permit(:title, :text)
     end
